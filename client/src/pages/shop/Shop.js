@@ -30,9 +30,15 @@ function Shop() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
         const res = await fetch(
           "https://ecommerce-project-zpx8.onrender.com/products",
+          { signal: controller.signal },
         );
+
+        clearTimeout(timeout);
 
         if (!res.ok) {
           const text = await res.text();
