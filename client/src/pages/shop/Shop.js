@@ -38,7 +38,9 @@ function Shop() {
         );
 
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          const text = await res.text();
+          console.log("SERVER ERROR RESPONSE:", text);
+          throw new Error(text);
         }
 
         const data = await res.json();
