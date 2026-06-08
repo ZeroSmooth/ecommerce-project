@@ -21,7 +21,7 @@ function Vouchers() {
 
   useEffect(() => {
     fetchVouchers();
-  }, []);
+  }, [fetchVouchers]);
 
   useEffect(() => {
     const handleScroll = () => {

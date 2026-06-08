@@ -15,7 +15,7 @@ function GCash() {
     if (!order || !order.items?.length || paid === "true") {
       navigate("/shop", { replace: true });
     }
-  }, []);
+  }, [navigate, order]);
 
   const handlePay = async () => {
     if (!order || !order.items?.length) {
