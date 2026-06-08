@@ -33,7 +33,7 @@ function Shop() {
         const res = await fetch(
           "https://ecommerce-project-zpx8.onrender.com/products",
           {
-            credentials: "include",
+            credentials: "omit",
           },
         );
 

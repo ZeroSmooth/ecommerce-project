@@ -4,7 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 
-const db = require("./dbAsync"); // ✅ USE THIS
+const db = require("./dbAsync");
 
 /* ROUTES */
 const receiptsRoutes = require("./routes/receipts");
@@ -17,7 +17,7 @@ const voucherRoutes = require("./routes/vouchers");
 const app = express();
 
 /* =========================
-   CORS (COOKIE SUPPORT)
+   CORS (FIXED)
 ========================= */
 const allowedOrigins = [
   "http://localhost:3000",
@@ -26,31 +26,34 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
+      // allow REST tools like Postman / server-to-server
       if (!origin) return callback(null, true);
 
-      // allow any vercel preview + your production domain
       if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
 
-      return callback(null, true);
+      return callback(new Error("CORS blocked: " + origin));
     },
     credentials: true,
   }),
 );
+
+// IMPORTANT: handle preflight requests
+app.options("*", cors());
 
 /* =========================
    MIDDLEWARE
 ========================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser()); // ENABLE COOKIE PARSING
+app.use(cookieParser());
 
 app.use("/uploads", express.static("uploads"));
 
 /* =========================
-   FILE UPLOAD (MULTER)
+   FILE UPLOAD
 ========================= */
 const storage = multer.diskStorage({
   destination: "./uploads",
