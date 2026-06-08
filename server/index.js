@@ -15,7 +15,14 @@ const productRoutes = require("./routes/products");
 const voucherRoutes = require("./routes/vouchers");
 
 const app = express();
+const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 10000); // 10s
 
+const res = await fetch(
+  "https://ecommerce-project-zpx8.onrender.com/products",
+  { signal: controller.signal },
+);
+clearTimeout(timeout);
 /* =========================
    CORS (FIXED)
 ========================= */
@@ -28,15 +35,12 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
-      // allow all Vercel preview deployments
       if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
-        return callback(null, true);
+        return callback(null, origin); // ✅ echo back the actual origin
       }
-
-      return callback(null, false);
+      return callback(new Error(`CORS blocked: ${origin}`));
     },
-    credentials: false, // IMPORTANT: disable unless you truly need cookies
+    credentials: false,
   }),
 );
 
