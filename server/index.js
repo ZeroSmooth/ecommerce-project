@@ -19,10 +19,9 @@ const app = express();
 /* =========================
    CORS (COOKIE SUPPORT)
 ========================= */
-app.use(
-  const allowedOrigins = [
+const allowedOrigins = [
   "http://localhost:3000",
-  "https://ecommerce-project-two-indol.vercel.app/", // 👈 CHANGE THIS
+  "https://ecommerce-project-two-indol.vercel.app",
 ];
 
 app.use(
@@ -30,15 +29,15 @@ app.use(
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      // allow any vercel preview + your production domain
+      if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      return callback(null, false);
     },
     credentials: true,
-  })
-);,
+  }),
 );
 
 /* =========================

@@ -28,9 +28,21 @@ function Shop() {
 
   // FETCH
   useEffect(() => {
-    fetch("https://ecommerce-project-zpx8.onrender.com/products")
-      .then((res) => res.json())
-      .then((data) => {
+    const loadProducts = async () => {
+      try {
+        const res = await fetch(
+          "https://ecommerce-project-zpx8.onrender.com/products",
+          {
+            credentials: "include",
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+
         const normalized = data.map((p) => ({
           ...p,
           id: p.id || p.ID,
@@ -41,12 +53,15 @@ function Shop() {
         }));
 
         setProducts(normalized);
-        setLoading(false);
-      })
-      .catch(() => {
+      } catch (err) {
+        console.log("PRODUCT FETCH ERROR:", err);
         setError("Failed to fetch products");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    loadProducts();
   }, []);
 
   // FILTERS
