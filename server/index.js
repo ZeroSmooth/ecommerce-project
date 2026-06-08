@@ -27,20 +27,19 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow REST tools like Postman / server-to-server
       if (!origin) return callback(null, true);
 
+      // allow all Vercel preview deployments
       if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
 
-      return callback(new Error("CORS blocked: " + origin));
+      return callback(null, false);
     },
-    credentials: true,
+    credentials: false, // IMPORTANT: disable unless you truly need cookies
   }),
 );
 
-// IMPORTANT: handle preflight requests
 app.options("*", cors());
 
 /* =========================

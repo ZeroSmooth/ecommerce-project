@@ -32,9 +32,6 @@ function Shop() {
       try {
         const res = await fetch(
           "https://ecommerce-project-zpx8.onrender.com/products",
-          {
-            credentials: "omit",
-          },
         );
 
         if (!res.ok) {
