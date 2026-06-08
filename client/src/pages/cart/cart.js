@@ -190,7 +190,7 @@ function Cart() {
 
               {item.image && (
                 <img
-                  src={`http://localhost:5000/uploads/${item.image}`}
+                  src={`https://ecommerce-project-zpx8.onrender.com/uploads/${item.image}`}
                   alt={item.name}
                   width="90"
                   style={{

@@ -28,7 +28,7 @@ function Shop() {
 
   // FETCH
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("https://ecommerce-project-zpx8.onrender.com/products")
       .then((res) => res.json())
       .then((data) => {
         const normalized = data.map((p) => ({

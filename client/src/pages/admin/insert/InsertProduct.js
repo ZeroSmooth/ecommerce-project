@@ -39,11 +39,14 @@ function InsertProduct() {
     if (image) formData.append("image", image);
 
     try {
-      const res = await fetch("http://localhost:5000/add-product", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://ecommerce-project-zpx8.onrender.com/add-product",
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        },
+      );
 
       const data = await res.json();
 

@@ -22,7 +22,9 @@ function Products() {
 
   // FETCH PRODUCTS
   const fetchProducts = async () => {
-    const res = await fetch("http://localhost:5000/products");
+    const res = await fetch(
+      "https://ecommerce-project-zpx8.onrender.com/products",
+    );
     const data = await res.json();
     setProducts(Array.isArray(data) ? data : []);
   };
@@ -45,7 +47,7 @@ function Products() {
 
   // DELETE PRODUCT
   const deleteProduct = async (id) => {
-    await fetch(`http://localhost:5000/products/${id}`, {
+    await fetch(`https://ecommerce-project-zpx8.onrender.com/products/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -66,12 +68,15 @@ function Products() {
       description: editingProduct.description || "",
     };
 
-    await fetch(`http://localhost:5000/products/${editingProduct.id}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    await fetch(
+      `https://ecommerce-project-zpx8.onrender.com/products/${editingProduct.id}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      },
+    );
 
     setEditingProduct(null);
     fetchProducts();
@@ -93,11 +98,14 @@ function Products() {
     formData.append("category", product.category);
     formData.append("image", file);
 
-    await fetch(`http://localhost:5000/products/${product.id}`, {
-      method: "PUT",
-      credentials: "include",
-      body: formData,
-    });
+    await fetch(
+      `https://ecommerce-project-zpx8.onrender.com/products/${product.id}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        body: formData,
+      },
+    );
 
     fetchProducts();
   };
@@ -455,7 +463,7 @@ function Products() {
               <td style={{ ...thTdStyle, textAlign: "center" }}>
                 {p.image && (
                   <img
-                    src={`http://localhost:5000/uploads/${p.image}`}
+                    src={`https://ecommerce-project-zpx8.onrender.com/uploads/${p.image}`}
                     width="50"
                     height="35"
                     alt=""

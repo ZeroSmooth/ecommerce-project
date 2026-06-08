@@ -6,7 +6,7 @@ function Receipts() {
   const tableRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/admin/receipts")
+    fetch("https://ecommerce-project-zpx8.onrender.com/admin/receipts")
       .then((res) => res.json())
       .then((data) => setReceipts(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Error fetching receipts:", err));

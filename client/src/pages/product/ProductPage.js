@@ -17,7 +17,7 @@ function ProductPage() {
   useEffect(() => {
     if (!productId) return;
 
-    fetch(`http://localhost:5000/products/${productId}`)
+    fetch(`https://ecommerce-project-zpx8.onrender.com/products/${productId}`)
       .then((res) => res.json())
       .then((data) => setProduct(data));
   }, [productId]);
@@ -129,7 +129,7 @@ function ProductPage() {
                 }}
               >
                 <img
-                  src={`http://localhost:5000/uploads/${product.image}`}
+                  src={`https://ecommerce-project-zpx8.onrender.com/uploads/${product.image}`}
                   alt={product.name}
                   width="320"
                   style={{

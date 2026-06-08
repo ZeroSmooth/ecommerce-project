@@ -73,7 +73,7 @@ function ProductCard({ product }) {
       <div className="product-image">
         {product.image ? (
           <img
-            src={`http://localhost:5000/uploads/${product.image}`}
+            src={`https://ecommerce-project-zpx8.onrender.com/uploads/${product.image}`}
             alt={product.name}
             className="product-img"
           />

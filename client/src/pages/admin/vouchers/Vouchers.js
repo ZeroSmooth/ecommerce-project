@@ -13,9 +13,12 @@ function Vouchers() {
 
   // ✅ FIX: wrap in useCallback
   const fetchVouchers = useCallback(async () => {
-    const res = await fetch("http://localhost:5000/admin/vouchers", {
-      headers: { Authorization: "Bearer " + token },
-    });
+    const res = await fetch(
+      "https://ecommerce-project-zpx8.onrender.com/admin/vouchers",
+      {
+        headers: { Authorization: "Bearer " + token },
+      },
+    );
     const data = await res.json();
     setVouchers(Array.isArray(data) ? data : []);
   }, [token]);
@@ -37,7 +40,7 @@ function Vouchers() {
   const createVoucher = async () => {
     if (!code || !value) return alert("Fill all fields");
 
-    await fetch("http://localhost:5000/admin/vouchers", {
+    await fetch("https://ecommerce-project-zpx8.onrender.com/admin/vouchers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,14 +59,17 @@ function Vouchers() {
     const { id, code, type, value, used } = currentVoucher;
     const usedInt = used === "Yes" ? 1 : 0;
 
-    await fetch(`http://localhost:5000/admin/vouchers/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+    await fetch(
+      `https://ecommerce-project-zpx8.onrender.com/admin/vouchers/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ code, type, value, used: usedInt }),
       },
-      body: JSON.stringify({ code, type, value, used: usedInt }),
-    });
+    );
 
     setEditingVoucherId(null);
     fetchVouchers();

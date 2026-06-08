@@ -20,10 +20,25 @@ const app = express();
    CORS (COOKIE SUPPORT)
 ========================= */
 app.use(
+  const allowedOrigins = [
+  "http://localhost:3000",
+  "https://ecommerce-project-two-indol.vercel.app/", // 👈 CHANGE THIS
+];
+
+app.use(
   cors({
-    origin: "http://localhost:3000",
-    credentials: true, // REQUIRED for cookies
-  }),
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);,
 );
 
 /* =========================
@@ -68,6 +83,8 @@ app.get("/", (req, res) => {
 /* =========================
    START SERVER
 ========================= */
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

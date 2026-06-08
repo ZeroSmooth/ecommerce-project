@@ -29,19 +29,25 @@ function GCash() {
       // mark paid FIRST (prevents double entry)
       localStorage.setItem("gcashPaid", "true");
 
-      await fetch("http://localhost:5000/admin/receipts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order),
-      });
+      await fetch(
+        "https://ecommerce-project-zpx8.onrender.com/admin/receipts",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order),
+        },
+      );
 
       for (const item of order.items) {
-        await fetch(`http://localhost:5000/products/${item.id}/reduce-stock`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // ⭐ ADD THIS
-          body: JSON.stringify({ qty: item.quantity || 1 }),
-        });
+        await fetch(
+          `https://ecommerce-project-zpx8.onrender.com/products/${item.id}/reduce-stock`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include", // ⭐ ADD THIS
+            body: JSON.stringify({ qty: item.quantity || 1 }),
+          },
+        );
       }
 
       // 🧹 REMOVE CART ITEMS AFTER SUCCESS

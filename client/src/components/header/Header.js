@@ -17,9 +17,12 @@ function Header() {
   ========================= */
   const loadUser = async () => {
     try {
-      const res = await fetch("http://localhost:5000/me", {
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://ecommerce-project-zpx8.onrender.com/me",
+        {
+          credentials: "include",
+        },
+      );
 
       const data = await res.json();
 
@@ -61,7 +64,7 @@ function Header() {
       "Are you sure you want to logout?",
       "warning",
       async () => {
-        await fetch("http://localhost:5000/logout", {
+        await fetch("https://ecommerce-project-zpx8.onrender.com/logout", {
           method: "POST",
           credentials: "include",
         });

@@ -14,9 +14,12 @@ function Users() {
      FETCH USERS
   ========================= */
   const fetchUsers = async () => {
-    const res = await fetch("http://localhost:5000/admin/users", {
-      credentials: "include", // ⭐ IMPORTANT (cookies)
-    });
+    const res = await fetch(
+      "https://ecommerce-project-zpx8.onrender.com/admin/users",
+      {
+        credentials: "include", // ⭐ IMPORTANT (cookies)
+      },
+    );
 
     const data = await res.json();
     setUsers(Array.isArray(data) ? data : []);
@@ -44,10 +47,13 @@ function Users() {
      DELETE USER
   ========================= */
   const deleteUser = async (id) => {
-    await fetch(`http://localhost:5000/admin/users/${id}`, {
-      method: "DELETE",
-      credentials: "include", // ⭐ IMPORTANT
-    });
+    await fetch(
+      `https://ecommerce-project-zpx8.onrender.com/admin/users/${id}`,
+      {
+        method: "DELETE",
+        credentials: "include", // ⭐ IMPORTANT
+      },
+    );
 
     fetchUsers();
   };
@@ -56,14 +62,17 @@ function Users() {
      SAVE USER
   ========================= */
   const saveUser = async () => {
-    await fetch(`http://localhost:5000/admin/users/${editingUser.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
+    await fetch(
+      `https://ecommerce-project-zpx8.onrender.com/admin/users/${editingUser.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // ⭐ IMPORTANT
+        body: JSON.stringify(editingUser),
       },
-      credentials: "include", // ⭐ IMPORTANT
-      body: JSON.stringify(editingUser),
-    });
+    );
 
     setEditingUser(null);
     fetchUsers();

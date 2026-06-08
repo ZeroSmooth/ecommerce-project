@@ -36,9 +36,12 @@ function Checkout() {
   const handleApplyVoucher = async () => {
     if (!voucherInput) return alert("Enter voucher code!");
 
-    const res = await fetch("http://localhost:5000/admin/vouchers", {
-      headers: { Authorization: "Bearer " + token },
-    });
+    const res = await fetch(
+      "https://ecommerce-project-zpx8.onrender.com/admin/vouchers",
+      {
+        headers: { Authorization: "Bearer " + token },
+      },
+    );
 
     const data = await res.json();
     const v = (Array.isArray(data) ? data : []).find(
@@ -105,25 +108,31 @@ function Checkout() {
     };
 
     try {
-      await fetch("http://localhost:5000/admin/receipts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order),
-      });
+      await fetch(
+        "https://ecommerce-project-zpx8.onrender.com/admin/receipts",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order),
+        },
+      );
 
       // reduce stock
       for (const item of checkoutItems) {
-        await fetch(`http://localhost:5000/products/${item.id}/reduce-stock`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // ⭐ ADD THIS
-          body: JSON.stringify({ qty: item.quantity || 1 }),
-        });
+        await fetch(
+          `https://ecommerce-project-zpx8.onrender.com/products/${item.id}/reduce-stock`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include", // ⭐ ADD THIS
+            body: JSON.stringify({ qty: item.quantity || 1 }),
+          },
+        );
       }
 
       if (appliedVoucher) {
         await fetch(
-          `http://localhost:5000/admin/vouchers/use/${appliedVoucher.code}`,
+          `https://ecommerce-project-zpx8.onrender.com/admin/vouchers/use/${appliedVoucher.code}`,
           { method: "PATCH" },
         );
       }

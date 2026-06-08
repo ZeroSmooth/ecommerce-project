@@ -8,9 +8,12 @@ function AdminRoute({ children }) {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const res = await fetch("http://localhost:5000/me", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "https://ecommerce-project-zpx8.onrender.com/me",
+          {
+            credentials: "include",
+          },
+        );
 
         const data = await res.json();
 

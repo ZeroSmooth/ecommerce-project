@@ -8,7 +8,9 @@ function OutOfStocks() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/products");
+      const res = await fetch(
+        "https://ecommerce-project-zpx8.onrender.com/products",
+      );
       const data = await res.json();
       const lowStock = data.filter((p) => Number(p.stock) <= 5);
       setProducts(lowStock);
@@ -49,16 +51,19 @@ function OutOfStocks() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/products/${id}`, {
-        method: "PUT",
-        credentials: "include", // ✅ REQUIRED
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `https://ecommerce-project-zpx8.onrender.com/products/${id}`,
+        {
+          method: "PUT",
+          credentials: "include", // ✅ REQUIRED
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            stock: Number(newStock),
+          }),
         },
-        body: JSON.stringify({
-          stock: Number(newStock),
-        }),
-      });
+      );
 
       if (!res.ok) throw new Error("Failed to update stock");
       fetchProducts();
