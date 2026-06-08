@@ -1,0 +1,64 @@
+/* Video Background */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.6) contrast(1.1) saturate(1.2);
+}
+
+.shop-wrapper {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.shop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.shop-content {
+  position: relative;
+  padding: 30px;
+  z-index: 2;
+}
+
+.shop-title {
+  color: white;
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.shop-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.shop-input,
+.shop-select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.shop-back {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}

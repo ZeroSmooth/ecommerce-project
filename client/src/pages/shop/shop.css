@@ -1,0 +1,135 @@
+/* ───────────────── SHOP WRAPPER ───────────────── */
+.shop-wrapper {
+  position: relative;
+  min-height: 100vh;
+  color: white;
+}
+
+/* VIDEO */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.shop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: -1;
+}
+
+/* CONTENT */
+.shop-content {
+  padding: 2rem;
+}
+
+/* TITLE */
+.shop-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ───────────────── FILTER BAR ───────────────── */
+.shop-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* LEFT / CENTER / RIGHT */
+.shop-left,
+.shop-center,
+.shop-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.shop-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.shop-right {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* INPUT */
+.shop-input {
+  width: 300px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+/* SELECT */
+.shop-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+/* BACK BUTTON */
+.shop-back {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #ffffff;
+  color: black;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.shop-back:hover {
+  transform: translateY(-2px);
+}
+
+/* ───────────────── GRID ───────────────── */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+/* STATUS */
+.status {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.status.error {
+  color: red;
+}
+
+/* ───────────────── RESPONSIVE ───────────────── */
+@media (max-width: 768px) {
+  .shop-center {
+    justify-content: flex-start;
+  }
+
+  .shop-input {
+    width: 100%;
+  }
+
+  .shop-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shop-right {
+    justify-content: center;
+  }
+}
