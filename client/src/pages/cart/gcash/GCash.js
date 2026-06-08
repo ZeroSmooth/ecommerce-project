@@ -8,14 +8,14 @@ function GCash() {
 
   const order = JSON.parse(localStorage.getItem("pendingOrder"));
 
-  // ❌ BLOCK ENTRY IF INVALID OR ALREADY PAID
   useEffect(() => {
     const paid = localStorage.getItem("gcashPaid");
+    const currentOrder = JSON.parse(localStorage.getItem("pendingOrder"));
 
-    if (!order || !order.items?.length || paid === "true") {
+    if (!currentOrder || !currentOrder.items?.length || paid === "true") {
       navigate("/shop", { replace: true });
     }
-  }, [navigate, order]);
+  }, [navigate]);
 
   const handlePay = async () => {
     if (!order || !order.items?.length) {

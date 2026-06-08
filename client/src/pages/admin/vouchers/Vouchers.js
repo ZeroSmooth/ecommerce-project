@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 function Vouchers() {
   const [vouchers, setVouchers] = useState([]);
@@ -11,13 +11,14 @@ function Vouchers() {
 
   const token = localStorage.getItem("token");
 
-  const fetchVouchers = async () => {
+  // ✅ FIX: wrap in useCallback
+  const fetchVouchers = useCallback(async () => {
     const res = await fetch("http://localhost:5000/admin/vouchers", {
       headers: { Authorization: "Bearer " + token },
     });
     const data = await res.json();
     setVouchers(Array.isArray(data) ? data : []);
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchVouchers();
@@ -53,7 +54,7 @@ function Vouchers() {
   const saveEdit = async (voucher) => {
     const currentVoucher = vouchers.find((v) => v.id === voucher.id);
     const { id, code, type, value, used } = currentVoucher;
-    const usedInt = used === "Yes" ? 1 : 0; // correctly convert string to 0/1
+    const usedInt = used === "Yes" ? 1 : 0;
 
     await fetch(`http://localhost:5000/admin/vouchers/${id}`, {
       method: "PATCH",
