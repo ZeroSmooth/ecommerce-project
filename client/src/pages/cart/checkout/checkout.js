@@ -51,9 +51,17 @@ function Checkout() {
     if (!v) return alert("Invalid voucher");
     if (v.used === "Yes") return alert("Already used");
 
-    let discount = v.type === "percent" ? (total * v.value) / 100 : v.value;
+    // ✅ force numeric conversion — DB returns strings
+    const numValue = Number(v.value);
 
-    setTotal((t) => Math.max(t - discount, 0));
+    if (isNaN(numValue) || numValue <= 0) return alert("Invalid voucher value");
+
+    const discount =
+      v.type === "percent"
+        ? (total * numValue) / 100 // ✅ was: total * v.value (string)
+        : numValue; // ✅ was: v.value (string)
+
+    setTotal(Math.max(total - discount, 0));
     setAppliedVoucher(v);
   };
 

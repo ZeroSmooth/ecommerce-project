@@ -15,6 +15,12 @@ const voucherRoutes = require("./routes/vouchers");
 
 const app = express();
 
+<<<<<<< HEAD
+=======
+/* =========================
+   CORS
+========================= */
+>>>>>>> 1cc434f (fix: CORS credentials and cookie sameSite for production)
 const allowedOrigins = [
   "http://localhost:3000",
   "https://ecommerce-project-two-indol.vercel.app",
@@ -29,7 +35,7 @@ app.use(
       }
       return callback(new Error(`CORS blocked: ${origin}`));
     },
-    credentials: false,
+    credentials: true,
   }),
 );
 

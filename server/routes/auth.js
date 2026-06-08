@@ -9,7 +9,6 @@ module.exports = (app, db) => {
     try {
       const { username, email, password, rememberMe } = req.body;
 
-      // 1. insert user first
       const result = await db.runAsync(
         `
         INSERT INTO users (username, email, password)
@@ -18,14 +17,11 @@ module.exports = (app, db) => {
         [username, email, password],
       );
 
-      // 2. create token
       const token = jwt.sign({ id: result.lastID, role: "user" }, SECRET_KEY);
 
-      // 3. create expiry
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + (rememberMe ? 30 : 1));
 
-      // 4. save token in DB
       await db.runAsync(
         `
         UPDATE users
@@ -35,16 +31,17 @@ module.exports = (app, db) => {
         [token, expiryDate.toISOString(), result.lastID],
       );
 
-      // 5. set cookies
       res.cookie("auth_token", token, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
+        secure: true,
         expires: expiryDate,
       });
 
       res.cookie("auth_expiry", expiryDate.toISOString(), {
         httpOnly: false,
-        sameSite: "lax",
+        sameSite: "none",
+        secure: true,
         expires: expiryDate,
       });
 
@@ -84,7 +81,6 @@ module.exports = (app, db) => {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + (rememberMe ? 30 : 1));
 
-      // SAVE TOKEN TO DB (IMPORTANT)
       await db.runAsync(
         `
         UPDATE users
@@ -96,13 +92,15 @@ module.exports = (app, db) => {
 
       res.cookie("auth_token", token, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
+        secure: true,
         expires: expiryDate,
       });
 
       res.cookie("auth_expiry", expiryDate.toISOString(), {
         httpOnly: false,
-        sameSite: "lax",
+        sameSite: "none",
+        secure: true,
         expires: expiryDate,
       });
 
@@ -187,8 +185,8 @@ module.exports = (app, db) => {
       }
     } catch {}
 
-    res.clearCookie("auth_token");
-    res.clearCookie("auth_expiry");
+    res.clearCookie("auth_token", { sameSite: "none", secure: true });
+    res.clearCookie("auth_expiry", { sameSite: "none", secure: true });
 
     res.json({
       success: true,
