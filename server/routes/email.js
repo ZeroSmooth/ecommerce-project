@@ -25,71 +25,53 @@ module.exports = (app) => {
       )
       .join("");
 
-    const voucherRow = order.voucher
-      ? `<tr>
-          <td colspan="2" style="padding:10px;color:#ff8a80;">Voucher: ${order.voucher}</td>
-          <td style="padding:10px;text-align:right;color:#ff8a80;">
-            -₱${order.items.reduce((a, i) => a + i.price * (i.qty || 1), 0) - order.total}
-          </td>
-         </tr>`
-      : "";
-
     const html = `
       <div style="background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;padding:40px;max-width:600px;margin:auto;border-radius:16px;">
-        <h1 style="color:#00ffb3;text-align:center;margin-bottom:4px;">✅ Items Delivered!</h1>
-        <p style="text-align:center;color:#aaa;margin-top:0;">${deliveredAt}</p>
+        <h1 style="color:#00ffb3;text-align:center;">✅ Items Delivered!</h1>
+        <p style="text-align:center;color:#aaa;">${deliveredAt}</p>
 
-        <div style="background:#1a1a1a;border-radius:12px;padding:20px;margin:20px 0;">
-          <p style="margin:0 0 6px;"><strong>Delivery Address:</strong> ${order.address}</p>
-          <p style="margin:0;"><strong>Payment Method:</strong> ${order.payment}</p>
-        </div>
-
-        <h3 style="color:#fff;margin-bottom:10px;">Items Ordered</h3>
-        <table style="width:100%;border-collapse:collapse;background:#1a1a1a;border-radius:12px;overflow:hidden;">
-          <thead>
-            <tr style="background:#222;">
-              <th style="padding:10px;text-align:left;color:#aaa;">Item</th>
-              <th style="padding:10px;text-align:center;color:#aaa;">Qty</th>
-              <th style="padding:10px;text-align:right;color:#aaa;">Price</th>
-            </tr>
-          </thead>
+        <h3>Items Ordered</h3>
+        <table style="width:100%;background:#1a1a1a;color:#fff;">
           <tbody>
             ${itemRows}
-            ${voucherRow}
-            <tr>
-              <td colspan="2" style="padding:12px 10px;font-weight:bold;font-size:16px;">Total</td>
-              <td style="padding:12px 10px;text-align:right;font-weight:bold;font-size:18px;color:#00ffb3;">₱${order.total}</td>
-            </tr>
           </tbody>
         </table>
 
-        <p style="text-align:center;color:#555;font-size:12px;margin-top:30px;">
-          Thank you for shopping with us!
-        </p>
+        <p style="margin-top:20px;">Total: ₱${order.total}</p>
       </div>
     `;
 
     try {
-      const sendSmtpEmail = new Brevo.SendSmtpEmail();
+      const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": process.env.BREVO_API_KEY,
+        },
+        body: JSON.stringify({
+          sender: {
+            name: "Your Shop",
+            email: "no-reply@yourdomain.com",
+          },
+          to: [
+            {
+              email: order.receiptEmail,
+            },
+          ],
+          subject: "Your Order Has Been Delivered! 🎉",
+          htmlContent: html,
+        }),
+      });
 
-      // 🔥 FIX: set API key HERE (works across all SDK versions)
-      sendSmtpEmail.apiKey = process.env.BREVO_API_KEY;
+      const data = await response.json();
 
-      sendSmtpEmail.to = [{ email: order.receiptEmail }];
-      sendSmtpEmail.sender = {
-        email: "no-reply@yourdomain.com",
-        name: "Your Shop",
-      };
+      if (!response.ok) {
+        throw new Error(JSON.stringify(data));
+      }
 
-      sendSmtpEmail.subject = "Your Order Has Been Delivered! 🎉";
-      sendSmtpEmail.htmlContent = html;
-
-      const apiInstance = new Brevo.TransactionalEmailsApi();
-      const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-      return res.json({ success: true, result });
+      return res.json({ success: true, data });
     } catch (err) {
-      console.error("Email error:", err);
+      console.error("Email error:", err.message);
       return res.json({ success: false, message: err.message });
     }
   });
