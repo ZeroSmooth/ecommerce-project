@@ -1,3 +1,7 @@
+require("dotenv").config();
+console.log("EMAIL_USER:", process.env.EMAIL_USER); // ← add this
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS); // ← add this
+
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
@@ -12,6 +16,7 @@ const adminRoutes = require("./routes/admin");
 const usersRouter = require("./routes/users");
 const productRoutes = require("./routes/products");
 const voucherRoutes = require("./routes/vouchers");
+const emailRoutes = require("./routes/email");
 
 const app = express();
 
@@ -29,10 +34,11 @@ app.use(
       }
       return callback(new Error(`CORS blocked: ${origin}`));
     },
-    credentials: false,
+    credentials: true,
   }),
 );
 
+// ✅ Middleware FIRST before any routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,6 +53,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// ✅ Routes AFTER middleware
 app.use("/admin/receipts", receiptsRoutes(db));
 app.use("/admin/users", usersRouter);
 app.use("/admin/vouchers", voucherRoutes(db));
@@ -54,6 +61,7 @@ app.use("/admin/vouchers", voucherRoutes(db));
 authRoutes(app, db);
 adminRoutes(app, db);
 productRoutes(app, db, upload);
+emailRoutes(app); // ✅ moved here
 
 app.get("/", (req, res) => {
   res.send("Server working");

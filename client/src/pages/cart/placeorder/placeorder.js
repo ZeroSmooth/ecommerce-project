@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePopup } from "../../../assets/popup.js";
-
+import API_URL from "../../../config/api.js";
 import backgroundVideo from "../../../assets/background.mp4";
 import "../../../assets/videoBackground.css";
 
@@ -26,6 +26,18 @@ function PlaceOrder() {
     }
 
     setOrder(placedOrder);
+
+    // ✅ Send receipt email immediately if email was provided
+    if (placedOrder.receiptEmail) {
+      fetch(`${API_URL}/send-receipt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: placedOrder }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log("Receipt email result:", data))
+        .catch((err) => console.error("Receipt email failed:", err));
+    }
   }, [navigate]);
 
   if (!order) {
@@ -74,7 +86,25 @@ function PlaceOrder() {
             Thank you for your purchase!
           </p>
 
-          {/* INFO BLOCK — no voucher here */}
+          {/* ✅ Email notice */}
+          {order.receiptEmail && (
+            <div
+              style={{
+                marginBottom: "20px",
+                padding: "10px 16px",
+                background: "rgba(0,255,179,0.08)",
+                border: "1px solid rgba(0,255,179,0.25)",
+                borderRadius: "10px",
+                fontSize: "13px",
+                color: "#00ffb3",
+              }}
+            >
+              📧 A delivery receipt will be sent to{" "}
+              <strong>{order.receiptEmail}</strong> once delivered.
+            </div>
+          )}
+
+          {/* INFO BLOCK */}
           <div style={{ textAlign: "left", marginBottom: "25px" }}>
             <p>
               <strong>Delivery Address:</strong> {order.address}
@@ -113,7 +143,7 @@ function PlaceOrder() {
             ))}
           </div>
 
-          {/* VOUCHER ROW + TOTAL — at the bottom */}
+          {/* VOUCHER ROW + TOTAL */}
           <div style={{ textAlign: "left", marginTop: "15px" }}>
             {order.voucher && discount > 0 && (
               <div

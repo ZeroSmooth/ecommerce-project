@@ -193,4 +193,58 @@ module.exports = (app, db) => {
       message: "Logged out successfully",
     });
   });
+  /* =========================
+  FORGOT PASSWORD - CHECK EMAIL
+========================= */
+  app.post("/forgot-password/check", async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      const user = await db.getAsync(
+        `SELECT id FROM users WHERE LOWER(email) = LOWER(?)`,
+        [email.trim()],
+      );
+
+      if (!user) {
+        return res.json({
+          success: false,
+          message: "No account found with that email",
+        });
+      }
+
+      return res.json({ success: true });
+    } catch (err) {
+      return res.json({ success: false, message: err.message });
+    }
+  });
+
+  /* =========================
+  FORGOT PASSWORD - RESET
+========================= */
+  app.post("/forgot-password/reset", async (req, res) => {
+    try {
+      const { email, newPassword } = req.body;
+
+      const user = await db.getAsync(
+        `SELECT id FROM users WHERE LOWER(email) = LOWER(?)`,
+        [email.trim()],
+      );
+
+      if (!user) {
+        return res.json({
+          success: false,
+          message: "No account found with that email",
+        });
+      }
+
+      await db.runAsync(
+        `UPDATE users SET password = ?, token = NULL, token_expiry = NULL WHERE id = ?`,
+        [newPassword, user.id],
+      );
+
+      return res.json({ success: true });
+    } catch (err) {
+      return res.json({ success: false, message: err.message });
+    }
+  });
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePopup } from "../../assets/popup.js";
+import API_URL from "../../config/api.js";
 import backgroundVideo from "../../assets/background.mp4";
 import "./style.css";
 
@@ -18,27 +19,21 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://ecommerce-project-zpx8.onrender.com/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, password, rememberMe }),
-        },
-      );
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password, rememberMe }),
+      });
 
       const data = await response.json();
 
-      // ❌ LOGIN FAILED
       if (!data.success) {
         showPopup(data.message || "Login failed", "error");
         return;
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-
-      // ✅ SUCCESS
       showPopup("Login successful", "success");
 
       setEmail("");
@@ -46,7 +41,6 @@ function Login() {
       setRememberMe(false);
 
       window.dispatchEvent(new Event("auth-change"));
-
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -58,15 +52,12 @@ function Login() {
 
   return (
     <div className="auth-container">
-      {/* 🎥 VIDEO BACKGROUND */}
       <video autoPlay loop muted playsInline className="auth-video-bg">
         <source src={backgroundVideo} type="video/mp4" />
       </video>
 
-      {/* DARK OVERLAY */}
       <div className="auth-overlay"></div>
 
-      {/* LOGIN BOX */}
       <div className="auth-box">
         <div className="auth-header">
           <span className="back-arrow" onClick={() => navigate("/")}>
@@ -92,14 +83,20 @@ function Login() {
             required
           />
 
-          <label className="remember-box">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            Remember Me
-          </label>
+          {/* ✅ Remember Me + Forgot Password row */}
+          <div className="remember-row">
+            <label className="remember-box">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              Remember Me
+            </label>
+            <Link to="/forgotpassword" className="forgot-link">
+              Forgot password?
+            </Link>
+          </div>
 
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}

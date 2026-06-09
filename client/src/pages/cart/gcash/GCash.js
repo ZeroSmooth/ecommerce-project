@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import API_URL from "../../../config/api.js";
 import gcashIcon from "./gcashicon.png";
 
 function GCash() {
@@ -26,43 +27,31 @@ function GCash() {
     setLoading(true);
 
     try {
-      // mark paid FIRST (prevents double entry)
       localStorage.setItem("gcashPaid", "true");
 
-      await fetch(
-        "https://ecommerce-project-zpx8.onrender.com/admin/receipts",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(order),
-        },
-      );
+      await fetch(`${API_URL}/admin/receipts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
 
       for (const item of order.items) {
-        await fetch(
-          `https://ecommerce-project-zpx8.onrender.com/products/${item.id}/reduce-stock`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include", // ⭐ ADD THIS
-            body: JSON.stringify({ qty: item.quantity || 1 }),
-          },
-        );
+        await fetch(`${API_URL}/products/${item.id}/reduce-stock`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ qty: item.quantity || 1 }),
+        });
       }
 
-      // 🧹 REMOVE CART ITEMS AFTER SUCCESS
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
       const remaining = cart.filter(
         (c) => !order.items.some((o) => o.id === c.id),
       );
 
       localStorage.setItem("cart", JSON.stringify(remaining));
-
-      // cleanup flow
       localStorage.removeItem("checkoutItems");
       localStorage.removeItem("pendingOrder");
-
       localStorage.setItem("placeOrderItems", JSON.stringify(order));
 
       navigate("/placeorder", { replace: true });

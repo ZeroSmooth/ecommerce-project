@@ -19,6 +19,7 @@ import Checkout from "./pages/cart/checkout/checkout";
 import PlaceOrder from "./pages/cart/placeorder/placeorder";
 
 import { PopupProvider } from "./assets/popup";
+import ForgotPassword from "./pages/auth/forgotpassword";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           {/* Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
 
           {/* Admin */}
           <Route
