@@ -51,7 +51,7 @@ function Users() {
       `https://ecommerce-project-zpx8.onrender.com/admin/users/${id}`,
       {
         method: "DELETE",
-        credentials: "include", // ⭐ IMPORTANT
+        credentials: "include",
       },
     );
 
@@ -69,7 +69,7 @@ function Users() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // ⭐ IMPORTANT
+        credentials: "include",
         body: JSON.stringify(editingUser),
       },
     );

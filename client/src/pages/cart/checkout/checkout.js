@@ -51,15 +51,11 @@ function Checkout() {
     if (!v) return alert("Invalid voucher");
     if (v.used === "Yes") return alert("Already used");
 
-    // ✅ force numeric conversion — DB returns strings
     const numValue = Number(v.value);
 
     if (isNaN(numValue) || numValue <= 0) return alert("Invalid voucher value");
 
-    const discount =
-      v.type === "percent"
-        ? (total * numValue) / 100 // ✅ was: total * v.value (string)
-        : numValue; // ✅ was: v.value (string)
+    const discount = v.type === "percent" ? (total * numValue) / 100 : numValue;
 
     setTotal(Math.max(total - discount, 0));
     setAppliedVoucher(v);
@@ -83,7 +79,7 @@ function Checkout() {
       return;
     }
 
-    // 👉 REDIRECT TO GCASH PAGE IF SELECTED
+    //  REDIRECT TO GCASH PAGE IF SELECTED
     if (selectedPayment === "GCash") {
       localStorage.setItem(
         "pendingOrder",
@@ -154,7 +150,7 @@ function Checkout() {
       localStorage.setItem("placeOrderItems", JSON.stringify(order));
       localStorage.removeItem("checkoutItems");
 
-      navigate("/placeorder"); // ✅ FIXED NAVIGATION (kept)
+      navigate("/placeorder");
     } catch (err) {
       alert("Order failed");
     }
@@ -340,7 +336,6 @@ function Checkout() {
   );
 }
 
-// reusable styles
 const btnStyle = (bg) => ({
   padding: "10px 14px",
   marginLeft: "10px",

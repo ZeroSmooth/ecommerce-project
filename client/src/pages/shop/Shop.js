@@ -60,7 +60,7 @@ function Shop() {
         setProducts(normalized);
       } catch (err) {
         console.log("PRODUCT FETCH ERROR:", err);
-        setError("Failed to fetch products");
+        setError("Server connection failed:");
       } finally {
         setLoading(false);
       }

@@ -34,7 +34,7 @@ function Header() {
 
   useEffect(() => {
     loadUser();
-  }, [location.pathname]); // 🔥 refresh on route change
+  }, [location.pathname]);
 
   /* =========================
      CART
@@ -53,8 +53,6 @@ function Header() {
   const currentPath = location.pathname;
   const hideAuthButton =
     currentPath === "/login" || currentPath === "/register";
-
-  const isProductPage = currentPath.startsWith("/product");
 
   /* =========================
      LOGOUT
@@ -91,12 +89,6 @@ function Header() {
           <div className="logo-container" onClick={() => navigate("/")}>
             <img src={logo} alt="Logo" className="logo" />
           </div>
-
-          {isProductPage && (
-            <button className="back-button" onClick={() => navigate(-1)}>
-              ← Back
-            </button>
-          )}
         </div>
 
         {/* SHOP */}

@@ -11,7 +11,6 @@ function Vouchers() {
 
   const token = localStorage.getItem("token");
 
-  // ✅ FIX: wrap in useCallback
   const fetchVouchers = useCallback(async () => {
     const res = await fetch(
       "https://ecommerce-project-zpx8.onrender.com/admin/vouchers",

@@ -56,7 +56,6 @@ function InsertProduct() {
         return;
       }
 
-      // ✅ SUCCESS POPUP WITH CONTINUE ACTION
       showPopup(
         "Product inserted successfully!",
         "success",

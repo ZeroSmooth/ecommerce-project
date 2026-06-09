@@ -55,7 +55,7 @@ function OutOfStocks() {
         `https://ecommerce-project-zpx8.onrender.com/products/${id}`,
         {
           method: "PUT",
-          credentials: "include", // ✅ REQUIRED
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

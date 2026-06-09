@@ -57,7 +57,7 @@ function Admin() {
             textShadow: "0 5px 20px rgba(0,0,0,0.6)",
           }}
         >
-          🔥 Admin Dashboard
+          Admin Dashboard
         </h1>
 
         <div

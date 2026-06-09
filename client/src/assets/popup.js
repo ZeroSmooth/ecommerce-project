@@ -31,7 +31,7 @@ export function PopupProvider({ children }) {
   };
 
   const handleCancel = () => {
-    closePopup(); // ❌ just close, no action
+    closePopup();
   };
 
   return (

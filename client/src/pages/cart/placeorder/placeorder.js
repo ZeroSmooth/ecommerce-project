@@ -13,13 +13,11 @@ function PlaceOrder() {
   useEffect(() => {
     const placedOrder = JSON.parse(localStorage.getItem("placeOrderItems"));
 
-    // ❌ BLOCK INVALID ACCESS
     if (!placedOrder) {
       navigate("/shop", { replace: true });
       return;
     }
 
-    // 🧹 CLEAN PAYMENT FLOW LOCKS (IMPORTANT)
     localStorage.removeItem("pendingOrder");
     localStorage.removeItem("gcashPaid");
 
@@ -38,14 +36,18 @@ function PlaceOrder() {
     );
   }
 
+  const originalTotal = order.items.reduce(
+    (acc, i) => acc + i.price * (i.qty || 1),
+    0,
+  );
+  const discount = originalTotal - order.total;
+
   return (
     <div style={{ position: "relative", minHeight: "100vh" }}>
-      {/* VIDEO BACKGROUND */}
       <video autoPlay loop muted playsInline className="background-video">
         <source src={backgroundVideo} type="video/mp4" />
       </video>
 
-      {/* CONTENT (UNCHANGED DESIGN) */}
       <div
         style={{
           padding: "120px 20px 60px",
@@ -66,8 +68,7 @@ function PlaceOrder() {
             boxShadow: "0 10px 40px rgba(0,0,0,0.25)",
           }}
         >
-          {/* TITLE */}
-          <h1 style={{ marginBottom: "10px" }}>🎉 Order Placed Successfully</h1>
+          <h1 style={{ marginBottom: "10px" }}>Order Placed Successfully</h1>
 
           <p style={{ color: "#c8e6c9", marginBottom: "25px" }}>
             Thank you for your purchase!
@@ -78,28 +79,8 @@ function PlaceOrder() {
             <p>
               <strong>Delivery Address:</strong> {order.address}
             </p>
-
             <p>
               <strong>Payment Method:</strong> {order.payment}
-            </p>
-
-            {order.voucher && (
-              <p>
-                <strong>Voucher Used:</strong> {order.voucher}
-              </p>
-            )}
-
-            <p style={{ fontSize: "18px", marginTop: "10px" }}>
-              <strong>Total Amount:</strong>{" "}
-              <span
-                style={{
-                  fontSize: "22px",
-                  fontWeight: "bold",
-                  color: "#00ffb3",
-                }}
-              >
-                ₱{order.total}
-              </span>
             </p>
           </div>
 
@@ -132,11 +113,44 @@ function PlaceOrder() {
             ))}
           </div>
 
-          {/* BUTTON (UNCHANGED) */}
+          {/* VOUCHER + TOTAL */}
+          <div style={{ textAlign: "left", marginTop: "15px" }}>
+            {order.voucher && discount > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "10px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.15)",
+                  fontSize: "14px",
+                  color: "#ff8a80",
+                }}
+              >
+                <span>Voucher: {order.voucher}</span>
+                <span>- ₱{discount}</span>
+              </div>
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "14px 0 0",
+                fontSize: "18px",
+                fontWeight: "bold",
+              }}
+            >
+              <span>Total Amount:</span>
+              <span style={{ color: "#00ffb3", fontSize: "22px" }}>
+                ₱{order.total}
+              </span>
+            </div>
+          </div>
+
+          {/* BUTTON */}
           <button
             onClick={() => {
               localStorage.removeItem("placeOrderItems");
-
               showPopup("Thank you!", "success", () => {
                 navigate("/shop", { replace: true });
               });
