@@ -29,6 +29,7 @@ function PlaceOrder() {
 
     // ✅ Send receipt email immediately if email was provided
     if (placedOrder.receiptEmail) {
+      console.log("Sending receipt to:", placedOrder.receiptEmail); // ← add this
       fetch(`${API_URL}/send-receipt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
