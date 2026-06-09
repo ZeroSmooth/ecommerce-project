@@ -74,7 +74,7 @@ function PlaceOrder() {
             Thank you for your purchase!
           </p>
 
-          {/* INFO BLOCK */}
+          {/* INFO BLOCK — no voucher here */}
           <div style={{ textAlign: "left", marginBottom: "25px" }}>
             <p>
               <strong>Delivery Address:</strong> {order.address}
@@ -113,7 +113,7 @@ function PlaceOrder() {
             ))}
           </div>
 
-          {/* VOUCHER + TOTAL */}
+          {/* VOUCHER ROW + TOTAL — at the bottom */}
           <div style={{ textAlign: "left", marginTop: "15px" }}>
             {order.voucher && discount > 0 && (
               <div
