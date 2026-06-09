@@ -1,8 +1,9 @@
 const Brevo = require("@getbrevo/brevo");
 
-// ✅ FIX: correct initialization (NO ApiClient, NO constructor error)
-const apiInstance = new Brevo.TransactionalEmailsApi();
-apiInstance.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+const apiClient = Brevo.ApiClient.instance;
+apiClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new Brevo.TransactionalEmailsApi(apiClient);
 
 module.exports = (app) => {
   app.post("/send-receipt", async (req, res) => {
@@ -78,7 +79,7 @@ module.exports = (app) => {
 
       sendSmtpEmail.to = [{ email: order.receiptEmail }];
       sendSmtpEmail.sender = {
-        email: "zerosmoothgtz@gmail.com", // must be verified in Brevo
+        email: "no-reply@yourdomain.com",
         name: "Your Shop",
       };
 
