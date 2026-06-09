@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePopup } from "../../../assets/popup.js";
 
 import backgroundVideo from "../../../assets/background.mp4";
 import "../../../assets/videoBackground.css";
 
 function Checkout() {
   const navigate = useNavigate();
+  const { showPopup } = usePopup();
 
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [addressInput, setAddressInput] = useState("");
@@ -34,7 +36,7 @@ function Checkout() {
 
   // ---------------- VOUCHER ----------------
   const handleApplyVoucher = async () => {
-    if (!voucherInput) return alert("Enter voucher code!");
+    if (!voucherInput) return showPopup("Enter voucher code!", "error");
 
     const res = await fetch(
       "https://ecommerce-project-zpx8.onrender.com/admin/vouchers",
@@ -48,17 +50,19 @@ function Checkout() {
       (x) => x.code.toLowerCase() === voucherInput.toLowerCase(),
     );
 
-    if (!v) return alert("Invalid voucher");
-    if (v.used === "Yes") return alert("Already used");
+    if (!v) return showPopup("Invalid voucher", "error");
+    if (v.used === "Yes") return showPopup("Voucher already used", "error");
 
     const numValue = Number(v.value);
 
-    if (isNaN(numValue) || numValue <= 0) return alert("Invalid voucher value");
+    if (isNaN(numValue) || numValue <= 0)
+      return showPopup("Invalid voucher value", "error");
 
     const discount = v.type === "percent" ? (total * numValue) / 100 : numValue;
 
     setTotal(Math.max(total - discount, 0));
     setAppliedVoucher(v);
+    showPopup(`Voucher ${v.code} applied!`, "success");
   };
 
   const handleUndoVoucher = () => {
@@ -72,14 +76,13 @@ function Checkout() {
     setVoucherInput("");
   };
 
-  // ---------------- PLACE ORDER (RESTORED) ----------------
+  // ---------------- PLACE ORDER ----------------
   const handlePlaceOrder = async () => {
     if (!addressInput) {
-      alert("Please enter a delivery address!");
+      showPopup("Please enter a delivery address!", "error");
       return;
     }
 
-    //  REDIRECT TO GCASH PAGE IF SELECTED
     if (selectedPayment === "GCash") {
       localStorage.setItem(
         "pendingOrder",
@@ -121,14 +124,13 @@ function Checkout() {
         },
       );
 
-      // reduce stock
       for (const item of checkoutItems) {
         await fetch(
           `https://ecommerce-project-zpx8.onrender.com/products/${item.id}/reduce-stock`,
           {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            credentials: "include", // ⭐ ADD THIS
+            credentials: "include",
             body: JSON.stringify({ qty: item.quantity || 1 }),
           },
         );
@@ -136,7 +138,7 @@ function Checkout() {
 
       if (appliedVoucher) {
         await fetch(
-          `https://ecommerce-project-zpx8.onrender.com/admin/vouchers/use/${appliedVoucher.code}`,
+          `https://ecommerce-project-zpx8.onrender.com/admin/vouchers/use/${encodeURIComponent(appliedVoucher.code)}`,
           { method: "PATCH" },
         );
       }
@@ -152,7 +154,7 @@ function Checkout() {
 
       navigate("/placeorder");
     } catch (err) {
-      alert("Order failed");
+      showPopup("Order failed. Please try again.", "error");
     }
   };
 
@@ -160,12 +162,10 @@ function Checkout() {
 
   return (
     <div style={{ position: "relative", minHeight: "100vh" }}>
-      {/* 🎥 VIDEO BACKGROUND */}
       <video autoPlay loop muted playsInline className="background-video">
         <source src={backgroundVideo} type="video/mp4" />
       </video>
 
-      {/* CENTER WRAPPER */}
       <div
         style={{
           padding: "120px 20px 60px",
@@ -178,7 +178,6 @@ function Checkout() {
             width: "1000px",
             display: "flex",
             gap: "30px",
-
             backdropFilter: "blur(20px)",
             background: "rgba(255,255,255,0.08)",
             border: "1px solid rgba(255,255,255,0.25)",
@@ -189,7 +188,6 @@ function Checkout() {
         >
           {/* LEFT */}
           <div style={{ flex: 1 }}>
-            {/* BACK BUTTON (ABOVE TITLE) */}
             <div style={{ marginBottom: "10px" }}>
               <button
                 onClick={() => navigate(-1)}
@@ -215,7 +213,6 @@ function Checkout() {
               </button>
             </div>
 
-            {/* TITLE */}
             <h1 style={{ marginBottom: "20px" }}>Checkout</h1>
 
             <label>Delivery Address</label>
@@ -274,7 +271,6 @@ function Checkout() {
                     onChange={(e) => setVoucherInput(e.target.value)}
                     style={inputStyle}
                   />
-
                   <button
                     onClick={handleApplyVoucher}
                     style={btnStyle("#2196f3")}
