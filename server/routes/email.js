@@ -50,8 +50,8 @@ module.exports = (app) => {
         },
         body: JSON.stringify({
           sender: {
-            name: "Your Shop",
-            email: "no-reply@yourdomain.com",
+            name: "ecommerce",
+            email: "zerosmoothgtz@gmail.com",
           },
           to: [
             {
