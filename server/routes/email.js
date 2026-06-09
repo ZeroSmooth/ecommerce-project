@@ -1,10 +1,5 @@
 const Brevo = require("@getbrevo/brevo");
 
-const apiClient = Brevo.ApiClient.instance;
-apiClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
-
-const apiInstance = new Brevo.TransactionalEmailsApi(apiClient);
-
 module.exports = (app) => {
   app.post("/send-receipt", async (req, res) => {
     const { order } = req.body;
@@ -77,6 +72,9 @@ module.exports = (app) => {
     try {
       const sendSmtpEmail = new Brevo.SendSmtpEmail();
 
+      // 🔥 FIX: set API key HERE (works across all SDK versions)
+      sendSmtpEmail.apiKey = process.env.BREVO_API_KEY;
+
       sendSmtpEmail.to = [{ email: order.receiptEmail }];
       sendSmtpEmail.sender = {
         email: "no-reply@yourdomain.com",
@@ -86,11 +84,12 @@ module.exports = (app) => {
       sendSmtpEmail.subject = "Your Order Has Been Delivered! 🎉";
       sendSmtpEmail.htmlContent = html;
 
-      await apiInstance.sendTransacEmail(sendSmtpEmail);
+      const apiInstance = new Brevo.TransactionalEmailsApi();
+      const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-      return res.json({ success: true });
+      return res.json({ success: true, result });
     } catch (err) {
-      console.error("Email error:", err.message);
+      console.error("Email error:", err);
       return res.json({ success: false, message: err.message });
     }
   });
