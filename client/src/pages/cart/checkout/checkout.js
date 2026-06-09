@@ -410,6 +410,7 @@ function Checkout() {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("");
   const [selectedStreet, setSelectedStreet] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
   const [selectedPayment, setSelectedPayment] = useState("COD");
   const [voucherInput, setVoucherInput] = useState("");
   const [appliedVoucher, setAppliedVoucher] = useState(null);
@@ -428,8 +429,8 @@ function Checkout() {
 
   // full address string
   const fullAddress =
-    selectedCity && selectedBarangay && selectedStreet
-      ? `${selectedStreet}, ${selectedBarangay}, ${selectedCity}`
+    selectedCity && selectedBarangay && selectedStreet && houseNumber.trim()
+      ? `${houseNumber}, ${selectedStreet}, ${selectedBarangay}, ${selectedCity}`
       : "";
 
   useEffect(() => {
@@ -447,11 +448,13 @@ function Checkout() {
     setSelectedCity(e.target.value);
     setSelectedBarangay("");
     setSelectedStreet("");
+    setHouseNumber("");
   };
 
   const handleBarangayChange = (e) => {
     setSelectedBarangay(e.target.value);
     setSelectedStreet("");
+    setHouseNumber("");
   };
 
   // ---------------- VOUCHER ----------------
@@ -645,7 +648,10 @@ function Checkout() {
             {/* Street */}
             <select
               value={selectedStreet}
-              onChange={(e) => setSelectedStreet(e.target.value)}
+              onChange={(e) => {
+                setSelectedStreet(e.target.value);
+                setHouseNumber("");
+              }}
               disabled={!selectedBarangay}
               style={{ ...selectStyle, opacity: selectedBarangay ? 1 : 0.5 }}
             >
@@ -656,6 +662,21 @@ function Checkout() {
                 </option>
               ))}
             </select>
+            {/* House Number */}
+            <input
+              type="text"
+              placeholder="House Number"
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
+              disabled={!selectedStreet}
+              style={{
+                ...inputStyle,
+                width: "100%",
+                marginTop: "8px",
+                opacity: selectedStreet ? 1 : 0.5,
+                boxSizing: "border-box",
+              }}
+            />
 
             {/* Preview */}
             {fullAddress && (

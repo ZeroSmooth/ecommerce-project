@@ -26,20 +26,108 @@ module.exports = (app) => {
       .join("");
 
     const html = `
-      <div style="background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;padding:40px;max-width:600px;margin:auto;border-radius:16px;">
-        <h1 style="color:#00ffb3;text-align:center;">✅ Items Delivered!</h1>
-        <p style="text-align:center;color:#aaa;">${deliveredAt}</p>
+  <div style="background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;padding:40px;max-width:600px;margin:auto;border-radius:16px;">
+    
+    <h1 style="color:#00ffb3;text-align:center;">
+      ✅ Items Delivered!
+    </h1>
 
-        <h3>Items Ordered</h3>
-        <table style="width:100%;background:#1a1a1a;color:#fff;">
-          <tbody>
-            ${itemRows}
-          </tbody>
-        </table>
+    <p style="text-align:center;color:#aaa;">
+      ${deliveredAt}
+    </p>
 
-        <p style="margin-top:20px;">Total: ₱${order.total}</p>
-      </div>
-    `;
+    <div style="
+      background:#1a1a1a;
+      border-left:4px solid #00ffb3;
+      border-radius:12px;
+      padding:20px;
+      margin:20px 0;
+    ">
+      <h3 style="margin:0 0 10px;color:#00ffb3;">
+        📍 Delivery Information
+      </h3>
+
+      <p style="margin:0 0 8px;">
+        <strong>Address:</strong><br>
+        ${order.address || "No address provided"}
+      </p>
+
+      <p style="margin:0;">
+        <strong>Payment Method:</strong>
+        ${order.payment || "N/A"}
+      </p>
+    </div>
+
+    <h3 style="color:#fff;margin-bottom:10px;">
+      Items Ordered
+    </h3>
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        background:#1a1a1a;
+        border-radius:12px;
+        overflow:hidden;
+      "
+    >
+      <thead>
+        <tr style="background:#222;">
+          <th style="padding:10px;text-align:left;color:#aaa;">
+            Item
+          </th>
+          <th style="padding:10px;text-align:center;color:#aaa;">
+            Qty
+          </th>
+          <th style="padding:10px;text-align:right;color:#aaa;">
+            Price
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        ${itemRows}
+
+        <tr>
+          <td
+            colspan="2"
+            style="
+              padding:12px 10px;
+              font-weight:bold;
+              font-size:16px;
+            "
+          >
+            Total
+          </td>
+
+          <td
+            style="
+              padding:12px 10px;
+              text-align:right;
+              font-weight:bold;
+              font-size:18px;
+              color:#00ffb3;
+            "
+          >
+            ₱${order.total}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p
+      style="
+        text-align:center;
+        color:#555;
+        font-size:12px;
+        margin-top:30px;
+      "
+    >
+      Thank you for shopping with us!
+    </p>
+
+  </div>
+`;
 
     try {
       const response = await fetch("https://api.brevo.com/v3/smtp/email", {
