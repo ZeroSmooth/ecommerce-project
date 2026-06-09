@@ -18,7 +18,7 @@ import Buy from "./pages/cart/buy";
 import Checkout from "./pages/cart/checkout/checkout";
 import PlaceOrder from "./pages/cart/placeorder/placeorder";
 
-import { PopupProvider } from "./assets/popup"; // or popupjs
+import { PopupProvider } from "./assets/popup";
 
 function App() {
   return (
