@@ -17,7 +17,10 @@ CREATE TABLE IF NOT EXISTS users (
   password TEXT,
   role TEXT DEFAULT 'user',
   token TEXT,
-  token_expiry DATETIME
+  token_expiry DATETIME,
+
+  reset_code TEXT,
+  reset_expiry DATETIME
 )
 `);
 
